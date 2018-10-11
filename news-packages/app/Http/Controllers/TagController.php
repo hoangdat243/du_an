@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App;
-class NewsCategoryController extends Controller
+class TagController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,9 +13,9 @@ class NewsCategoryController extends Controller
      */
     public function index()
     {
-        $category= App\NewsCategory::all();
+        $tag= App\Tag::all();
         
-        return view('category.category',compact('category'));
+        return view('tag.index',compact('tag'));
     }
 
     /**
@@ -26,7 +26,7 @@ class NewsCategoryController extends Controller
     public function create()
     {
         //
-        return view('category.add');
+        return view('tag.add');
     }
 
     /**
@@ -39,7 +39,7 @@ class NewsCategoryController extends Controller
     {
         //validate
         $request->validate([
-            'txtName' => 'required|unique:news_categories,name|max:255',
+            'txtName' => 'required|unique:tags,name|max:255',
             'txtMetaTitle' => 'required|max:60',
             'txtDescription' => 'required|max:255',
             'txtSlug' => 'unique:news_categories,name|max:255'
@@ -56,16 +56,16 @@ class NewsCategoryController extends Controller
         ]);
 
 
-        $category= new App\NewsCategory;
-        $category->name= $request->txtName;
+        $tag= new App\Tag;
+        $tag->name= $request->txtName;
         if (isset($request->txtSlug)) {
-            $category->slug= $request->txtSlug;
+            $tag->slug= $request->txtSlug;
         }
         else{
-            $category->slug= str_slug($request->txtName,'-');
+            $tag->slug= str_slug($request->txtName,'-');
         }
-        $category->meta_title= $request->txtMetaTitle;
-        $category->meta_description= $request->txtDescription;
+        $tag->meta_title= $request->txtMetaTitle;
+        $tag->meta_description= $request->txtDescription;
         //add image
         if (isset($request->fImage)) {
             $file = $request->fImage;
@@ -73,9 +73,9 @@ class NewsCategoryController extends Controller
             $file -> getClientOriginalExtension();
             $tmp=$file -> getRealPath();
             $file -> move('uploads/images', $file->getClientOriginalName());
-            $category -> image=  "/uploads/images/".$name;
-        }else{ $category -> image='';}
-        $category->save();
+            $tag -> image=  "/uploads/images/".$name;
+        }else{ $tag -> image='';}
+        $tag->save();
         return redirect()->back();
     }
 
@@ -98,8 +98,8 @@ class NewsCategoryController extends Controller
      */
     public function edit($id)
     {
-        $data= App\NewsCategory::find($id);
-        return view('category.edit',compact('data'));
+        $data= App\Tag::find($id);
+        return view('tag.edit',compact('data'));
     }
 
     /**
@@ -113,21 +113,21 @@ class NewsCategoryController extends Controller
     {
         
         
-        $category= App\NewsCategory::find($id);
-        $category->name= $request->txtName;
-        $category->slug= $request->txtSlug;
-        $category->meta_title= $request->txtMetaTitle;
-        $category->meta_description= $request->txtDescription;
+        $tag= App\Tag::find($id);
+        $tag->name= $request->txtName;
+        $tag->slug= $request->txtSlug;
+        $tag->meta_title= $request->txtMetaTitle;
+        $tag->meta_description= $request->txtDescription;
         if (isset($request->fImage)) {
             $file = $request->fImage;
             $name=$file->getClientOriginalName();
             $file->getClientOriginalExtension();
             $tmp=$file->getRealPath();
             $file->move('uploads/images', $file->getClientOriginalName());
-            $category->image=  "/uploads/images/".$name;
+            $tag->image=  "/uploads/images/".$name;
         }
-        $category->save();
-        return redirect('news-categories');
+        $tag->save();
+        return redirect('news-tag');
     }
 
     /**
@@ -138,13 +138,12 @@ class NewsCategoryController extends Controller
      */
     public function destroy($id)
     {
-        App\NewsCategory::destroy($id);
+        App\Tag::destroy($id);
         return redirect()->back();
     }
     public function search(Request $request)
     {
-        $tag= App\NewsCategory::where('name','like','%'.$request->key.'%')->get();
+        $tag= App\Tag::where('name','like','%'.$request->key.'%')->get();
        return view('tag.search',compact('tag'));
     }
-    
 }

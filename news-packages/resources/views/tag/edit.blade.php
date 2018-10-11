@@ -90,21 +90,21 @@
                   </div>
                   
                     <br />
-                    <form method="post" action="{{ route('news-categories.update', $data->id) }}" id="demo-form" data-parsley-validate class="form-horizontal form-label-left col-md-offset-2 col-md-8" enctype="multipart/form-data">
+                    <form method="post" action="{{ route('news-tag.update', $data->id) }}" id="demo-form" data-parsley-validate class="form-horizontal form-label-left col-md-offset-2 col-md-8" enctype="multipart/form-data">
                         @method('put')
                         @csrf
                       <div class="form-group">
-                        <label class="control-label">Tên danh mục <span class="required">*</span>
+                        <label class="control-label">Tên tag <span class="required">*</span>
                         </label>
                         <div class="">  
                           <input type="text"  name="txtName" required="required" class="form-control col-md-7 col-xs-12" value="{{$data->name}}" >
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label">Slug <span class="required">*</span>
+                        <label class="control-label">Slug <span class="required">(bỏ trống nếu tạo tự động)</span>
                         </label>
                         <div class="">  
-                          <input type="text"  name="txtSlug" required="required" class="form-control col-md-7 col-xs-12" value="{{$data->slug}}" >
+                          <input type="text"  name="txtSlug"  class="form-control col-md-7 col-xs-12" value="{{$data->slug}}" >
                         </div>
                       </div>
 

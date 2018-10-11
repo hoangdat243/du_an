@@ -37,6 +37,12 @@
 
     <script src="../ckeditor/ckeditor.js"></script>
     
+    <style type="text/css">
+      #preview img{
+        width: 200px;
+        height:120px;
+      }
+    </style>
   </head>
 
   <body class="nav-md">
@@ -45,66 +51,17 @@
         <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0;">
-              <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>Trang tin tức!</span></a>
+              <a href="index.html" class="site_title"><span>Trang tin tức!</span></a>
             </div>
 
             <div class="clearfix"></div>
 
-            <!-- menu profile quick info -->
-            <div class="profile clearfix">
-              <div class="profile_pic">
-                <img src="images/img.jpg" alt="..." class="img-circle profile_img">
-              </div>
-              <div class="profile_info">
-                <span>Welcome,</span>
-                <h2>John Doe</h2>
-              </div>
-            </div>
-            <!-- /menu profile quick info -->
+           
 
             <br />
-
-            <!-- sidebar menu --> 
-           <!--                                                                          LEFT -->
-            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-              <div class="menu_section">
-                <h3>General</h3>
-                <ul class="nav side-menu">
-                  <li><a><i class="fa fa-edit"></i> Tin tức <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="form.html">Danh sách tin</a></li>
-                      <li><a href="form_advanced.html">Thêm mới tin</a></li>
-                      <li><a href="form_validation.html">Tác giả</a></li>
-                      <li><a href="form_wizards.html">Thêm tác giả</a></li>
-                      <li><a href="form_upload.html">Thêm danh mục tin</a></li>
-                     
-                    </ul>
-                  </li>
-
-                </ul>
-              </div>
-             
-
-            </div>
-            <!--                                                                         END LEFT -->
-            <!-- /sidebar menu -->
-
-            <!-- /menu footer buttons -->
-            <div class="sidebar-footer hidden-small">
-              <a data-toggle="tooltip" data-placement="top" title="Settings">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-              </a>
-              <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-              </a>
-              <a data-toggle="tooltip" data-placement="top" title="Lock">
-                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-              </a>
-              <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
-                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-              </a>
-            </div>
-            <!-- /menu footer buttons -->
+          <!--menu -->
+           @include('menu')
+          <!--end menu -->
           </div>
         </div>
 
@@ -115,7 +72,7 @@
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3> THÊM BÀI VIẾT MỚI</h3>
+                <h3> THÊM TIN TỨC</h3>
               </div>
 
               
@@ -123,6 +80,15 @@
             <div class="clearfix"></div>
             <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
+              @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
                 <div class="x_panel">
                   <div class="x_title">
                     
@@ -134,18 +100,42 @@
                     <form method="post" action="{{ route('news.store') }}" id="demo-form" data-parsley-validate class="form-horizontal form-label-left col-md-offset-2 col-md-8" enctype="multipart/form-data">
                         @csrf
                       <div class="form-group">
-                        <label class="control-label">Tiêu đề bài viết <span class="required">*</span>
+                        <label class="control-label">Tên tag <span class="required">*</span>
                         </label>
-                        <div class="">
-                          <input type="text"  name="txtName" required="required" class="form-control col-md-7 col-xs-12">
+                        <div class="">  
+                          <input type="text"  name="txtName" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
-
                       <div class="form-group">
+                        <label class="control-label">Slug <small>(Để trống nếu tạo tự động)</small>
+                        </label>
+                        <div class="">  
+                          <input type="text"  name="txtSlug"  class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label">Tag</label>
+                          <div class="">
+                            <select class="form-control tag" name="slTag[]" multiple="multiple">
+                                @foreach($tag as $v)
+                                <option value="{{$v->id}}" >{{$v->name}}</option>  
+                                @endforeach
+                            </select>
+                          </div>
+                        </div>
+                      <div class="form-group">  
                         <label class="control-label" >Meta Title <span class="required">*</span>
                         </label>
                         <div class="">
-                          <input type="text"  name="txtMetaTiTle" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text"  name="txtMetaTitle" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+
+                      <div class="form-group">  
+                        <label class="control-label" >Mô tả ngắn <span class="required">*</span>
+                        </label>
+                        <div class="">
+                          <input type="text"  name="txtShortDescription" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
                       
@@ -161,38 +151,17 @@
                             </select>
                           </div>
                         </div>
-                      
-                        <div class="form-group">
-                            <label class="control-label" >Tác giả</label>
-                            <div class="">
-                              <select class="form-control" name="slAuthor">
-                                <option>Choose option</option>
-                                @foreach($author as $v)
-                                <option value="{{$v->id}}" >{{$v->name}}</option>  
-                                @endforeach
-                              </select>
-                            </div>
-                          </div>
                      
                           
                       <div class="form-group">
-                        <label class="control-label ">Ngày tạo<span class="required">*</span>
+                        <label class="control-label ">Mô tả<span class="required">*</span>
                         </label>
                         <div class="">
-                          <input name="txtCreate" class="date-picker form-control col-md-7 col-xs-12" required="required" type="datetime-local">
+                          
+                          <textarea name="txtDescription" class="form-control" rows="5" id="comment"></textarea>
                         </div>
                       </div>
-                      <div class="form-group">
-                          <label class="control-label">Tag</label>
-                          <div class="">
-                            <select class="form-control tag" name="slTag[]" multiple="multiple">
-                                @foreach($tag as $v)
-                                <option value="{{$v->id}}" >{{$v->name}}</option>  
-                                @endforeach
-                            </select>
-                          </div>
-                        </div>
-
+                      
                       <div class="form-group">
                         <label class="control-label ">Status</label>
                         <div class="">
@@ -208,35 +177,49 @@
                               </div>
                           </div>
                       </div>  
+
+                      
                       <div class="form-group">
-                        <label class="control-label ">Image</label>
+                        <label class="control-label ">Hình ảnh</label>
                         <div class="">
                             <div class="radio col-md-3 col-sm-6 col-xs-12">
                             <input type="file"  name="fImage"  class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
+                        
                       </div>  
-  
-                     <br>
-                     <br>
-                      <!-- edittor -->
-                      <textarea name="content"></textarea>
+                      <div id="preview">
+                            <img  src="/uploads/images/image.png" alt="">
+                      </div>
+                      <br>
+
+                     <!-- edittor -->
+                     <div class="form-group">
+                          <label class="control-label ">Nội dung tin tức</label>
+                      </div>
+                     <textarea name="content"></textarea>
                       <script>
-                                      CKEDITOR.replace( 'content', {
-                      filebrowserBrowseUrl: '{{ asset('ckfinder/ckfinder.html') }}',
-                      filebrowserImageBrowseUrl: '{{ asset('ckfinder/ckfinder.html?type=Images') }}',
-                      filebrowserFlashBrowseUrl: '{{ asset('ckfinder/ckfinder.html?type=Flash') }}',
-                      filebrowserUploadUrl: '{{ asset('ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files') }}',
-                      filebrowserImageUploadUrl: '{{ asset('ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images') }}',
-                      filebrowserFlashUploadUrl: '{{ asset('ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash') }}'
-                  } );
+                        CKEDITOR.config.height = '500px';
+                        CKEDITOR.replace( 'content', {
+                          filebrowserBrowseUrl: '{{ asset('ckfinder/ckfinder.html') }}',
+
+                          filebrowserImageBrowseUrl: '{{ asset('ckfinder/ckfinder.html?type=Images') }}',
+                          
+                          filebrowserFlashBrowseUrl: '{{ asset('ckfinder/ckfinder.html?type=Flash') }}',
+                          filebrowserUploadUrl: '{{ asset('ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files') }}',
+                          filebrowserImageUploadUrl: '{{ asset('ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images') }}',
+                          filebrowserFlashUploadUrl: '{{ asset('ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash') }}'
+                          });
                       </script>
                       <!-- end editor -->
+
                       
+                     <br>
+                     <br>         
                       <div class="ln_solid"></div>
                       <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                            <button class="btn btn-primary" type="button">Cancel</button>
+                           
                             <button class="btn btn-primary" type="reset">Reset</button>
                             <button type="submit" class="btn btn-success">Submit</button>
                         </div>
@@ -255,9 +238,7 @@
 
         <!-- footer content -->
         <footer>
-          <div class="pull-right">
-            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
-          </div>
+         
           <div class="clearfix"></div>
         </footer>
         <!-- /footer content -->
@@ -306,6 +287,21 @@
     
     <script type="text/javascript">
       $(".tag").select2();
+  </script> 
+
+  <script type="text/javascript">
+    function readURL(input){
+      if (input.files&&input.files[0]) {
+        var reader=new FileReader();
+        reader.onload=function(e){
+          $('#preview img').attr('src',e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+    $(document).on('change','input[type="file"]',function(){
+      readURL(this);
+    })
   </script>
   </body>
 </html>

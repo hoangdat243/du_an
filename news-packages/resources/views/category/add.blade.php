@@ -59,48 +59,9 @@
            
 
             <br />
-
-            <!-- sidebar menu --> 
-           <!--                                                                          LEFT -->
-            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-              <div class="menu_section">
-                <h3>General</h3>
-                <ul class="nav side-menu">
-                  <li><a><i class="fa fa-edit"></i> Tin tức <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="form.html">Danh sách tin</a></li>
-                      <li><a href="form_advanced.html">Thêm mới tin</a></li>
-                      <li><a href="form_validation.html">Tác giả</a></li>
-                      <li><a href="form_wizards.html">Thêm tác giả</a></li>
-                      <li><a href="form_upload.html">Thêm danh mục tin</a></li>
-                     
-                    </ul>
-                  </li>
-
-                </ul>
-              </div>
-             
-
-            </div>
-            <!--                                                                         END LEFT -->
-            <!-- /sidebar menu -->
-
-            <!-- /menu footer buttons -->
-            <div class="sidebar-footer hidden-small">
-              <a data-toggle="tooltip" data-placement="top" title="Settings">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-              </a>
-              <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-              </a>
-              <a data-toggle="tooltip" data-placement="top" title="Lock">
-                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-              </a>
-              <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
-                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-              </a>
-            </div>
-            <!-- /menu footer buttons -->
+          <!--menu -->
+           @include('menu')
+          <!--end menu -->
           </div>
         </div>
 
@@ -113,7 +74,18 @@
               <div class="title_left">
                 <h3> THÊM DANH MỤC MỚI</h3>
               </div>
-
+              <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                  <form action="/search/news-category">
+                  <div class="input-group">
+                    <input type="text" class="form-control" name=key placeholder="Search tag">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="submit">Go!</button>
+                    </span>
+                  </div>
+                  </form>
+                </div>
+              </div>
               
             </div> 
             <div class="clearfix"></div>
@@ -127,7 +99,7 @@
             @endforeach
         </ul>
     </div>
-@endif
+  @endif
                 <div class="x_panel">
                   <div class="x_title">
                     
@@ -136,7 +108,7 @@
                   </div>
                   
                     <br />
-                    <form method="post" action="{{ route('news-categories.store') }}" id="demo-form" data-parsley-validate class="form-horizontal form-label-left col-md-offset-2 col-md-8" enctype="multipart/form-data">
+                    <form method="get" action="{{ route('news-categories.store') }}" id="demo-form" data-parsley-validate class="form-horizontal form-label-left col-md-offset-2 col-md-8" enctype="multipart/form-data">
                         @csrf
                       <div class="form-group">
                         <label class="control-label">Tên danh mục <span class="required">*</span>
@@ -176,7 +148,7 @@
 
                       
                       <div class="form-group">
-                        <label class="control-label ">Image</label>
+                        <label class="control-label ">Hình ảnh</label>
                         <div class="">
                             <div class="radio col-md-3 col-sm-6 col-xs-12">
                             <input type="file"  name="fImage"  class="form-control col-md-7 col-xs-12">

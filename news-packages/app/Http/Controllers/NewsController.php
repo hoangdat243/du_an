@@ -14,9 +14,11 @@ class NewsController extends Controller
     public function index()
     {
         //
+
         $data= App\News::all();
+        $category= App\NewsCategory::all();
         // var_dump($data->toArray());
-        return view('addNews');
+        return view('news.index',compact('data','category'));
     }
 
     /**
@@ -26,10 +28,10 @@ class NewsController extends Controller
      */
     public function create()
     {
-        $author= App\NewsAuthor::all();
+        
         $category= App\NewsCategory::all();
         $tag= App\Tag::all();
-        return view('addNews',compact('author','category','tag'));
+        return view('news.add',compact('category','tag'));
     }
 
     /**
@@ -42,11 +44,19 @@ class NewsController extends Controller
     {
         $news= new App\News;
         $news->name= $request->txtName;
-        $news->meta_tiltle= $request->txtMetaTiTle;
-       //$news->slug= "add-new-2";
+        $news->meta_title= $request->txtMetaTiTle;
+        if (isset($request->txtSlug)) {
+            $news->slug= $request->txtSlug;
+        }
+        else{
+            $news->slug= str_slug($request->txtName,'-');
+        }
+        $news->meta_title= $request->txtMetaTitle;
+        $news->short_description=$request->txtShortDescription;
+        $news->meta_description= $request->txtDescription;
         $news->content=$request->content ;
         $news->status= $request->rdStatus;
-        $news->author_id= $request->slAuthor;
+        $news->author_id= 1;
         $news->category_id= $request->slCategory;
         
         if (isset($request->fImage)) {
@@ -86,6 +96,11 @@ class NewsController extends Controller
     public function edit($id)
     {
         //
+        $data= App\News::find($id);
+        $category=App\NewsCategory::all();
+        $tag=App\Tag::all();
+      
+        return view('news.edit',compact('data','category','tag'));
     }
 
     /**
@@ -97,7 +112,35 @@ class NewsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $news= App\News::find($id);
+        $news->name= $request->txtName;
+        $news->meta_title= $request->txtMetaTiTle;
+        if (isset($request->txtSlug)) {
+            $news->slug= $request->txtSlug;
+        }
+        else{
+            $news->slug= str_slug($request->txtName,'-');
+        }
+        $news->meta_title= $request->txtMetaTitle;
+        $news->short_description=$request->txtShortDescription;
+        $news->meta_description= $request->txtDescription;
+        $news->content=$request->content ;
+        $news->status= $request->rdStatus;
+        $news->author_id= 1;
+        $news->category_id= $request->slCategory;
+        
+        if (isset($request->fImage)) {
+            $file = $request->fImage;
+            $name=$file->getClientOriginalName();
+            $file->getClientOriginalExtension();
+            $tmp=$file->getRealPath();
+            $file->move('uploads/images', $file->getClientOriginalName());
+            $news->image=  "/uploads/images/".$name; 
+        }
+        $news->save();
+        $news->Tag()->detach();
+        $news->Tag()->attach($request->slTag);
+        return redirect('news');
     }
 
     /**
@@ -110,4 +153,24 @@ class NewsController extends Controller
     {
         //
     }
+
+    public function search(Request $request)
+    {
+        $data = App\News::orderBy('id', 'desc');
+        $data = $data->where(function ($q) use ($request) {
+            if(!empty($request->name)){
+                $q->where('name', 'like', '%' . $request->name . '%');
+            }
+            if(!empty($request->category)){
+                $q->where('category_id',$request->category);
+            }
+            if(!empty($request->status)){
+                $q->where('status', $request->status);
+            }
+           
+        })->get();
+       
+       var_dump($data->toArray());
+    }
+    
 }

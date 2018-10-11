@@ -56,25 +56,22 @@
 
             <div class="clearfix"></div>
 
-            <!-- menu profile quick info -->
            
-            <!-- /menu profile quick info -->
 
             <br />
-
           <!--menu -->
-          @include('menu')
+           @include('menu')
           <!--end menu -->
           </div>
         </div>
 
-        
+
         <!-- page content -->
         <div class="right_col" role="main">
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3> SỬA DANH MỤC</h3>
+                <h3> SỬA TIN TỨC</h3>
               </div>
 
               
@@ -82,6 +79,15 @@
             <div class="clearfix"></div>
             <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
+              @if ($errors->any())
+              <div class="alert alert-danger">
+                  <ul>
+                      @foreach ($errors->all() as $error)
+                          <li>{{ $error }}</li>
+                      @endforeach
+                  </ul>
+              </div>
+            @endif
                 <div class="x_panel">
                   <div class="x_title">
                     
@@ -90,33 +96,60 @@
                   </div>
                   
                     <br />
-                    <form method="post" action="{{ route('news-categories.update', $data->id) }}" id="demo-form" data-parsley-validate class="form-horizontal form-label-left col-md-offset-2 col-md-8" enctype="multipart/form-data">
-                        @method('put')
-                        @csrf
+                    <form method="post" action="{{ route('news.update', $data->id) }}" id="demo-form" data-parsley-validate class="form-horizontal form-label-left col-md-offset-2 col-md-8" enctype="multipart/form-data">
+                    @method('put')    
+                    @csrf
                       <div class="form-group">
-                        <label class="control-label">Tên danh mục <span class="required">*</span>
+                        <label class="control-label">Tên tin tức <span class="required">*</span>
                         </label>
                         <div class="">  
-                          <input type="text"  name="txtName" required="required" class="form-control col-md-7 col-xs-12" value="{{$data->name}}" >
+                          <input type="text"  name="txtName" class="form-control col-md-7 col-xs-12" value="{{$data->name}}">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label">Slug <span class="required">*</span>
+                        <label class="control-label">Slug <small>(Để trống nếu tạo tự động)</small>
                         </label>
                         <div class="">  
-                          <input type="text"  name="txtSlug" required="required" class="form-control col-md-7 col-xs-12" value="{{$data->slug}}" >
+                          <input type="text"  name="txtSlug"  class="form-control col-md-7 col-xs-12" value="{{$data->slug}}">
                         </div>
                       </div>
-
+                      <div class="form-group">
+                          <label class="control-label">Tag</label>
+                          <div class="">
+                            <select class="form-control tag" name="slTag[]" multiple="multiple">
+                                @foreach($tag as $v)
+                                    <option <?php foreach($data->tag as $t){ if($t->id == $v->id){ ?> selected <?php }} ?> value="{{$v->id}}" >{{$v->name}}</option>  
+                                @endforeach
+                            </select>
+                          </div>
+                        </div>
                       <div class="form-group">  
                         <label class="control-label" >Meta Title <span class="required">*</span>
                         </label>
                         <div class="">
-                          <input type="text"  name="txtMetaTitle" required="required" class="form-control col-md-7 col-xs-12" value="{{$data->meta_title}}">
+                          <input type="text"  name="txtMetaTitle" class="form-control col-md-7 col-xs-12" value="{{$data->meta_title}}">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label">Chuyên mục</label>
+                          <div class="">
+                            <select class="form-control" name="slCategory" >       
+                              @foreach($category as $v)
+                                <option <?php if($data->category->id== $v->id){ ?> selected <?php } ?> value="{{$v->id}}" >{{$v->name}}</option>  
+                              @endforeach 
+                            </select>
+                          </div>
+                        </div>
+
+                      <div class="form-group">  
+                        <label class="control-label" >Mô tả ngắn <span class="required">*</span>
+                        </label>
+                        <div class="">
+                          <input type="text"  name="txtShortDescription" class="form-control col-md-7 col-xs-12" value="{{$data->short_description}}">
                         </div>
                       </div>
                       
-                     
+                      
                      
                           
                       <div class="form-group">
@@ -128,8 +161,23 @@
                         </div>
                       </div>
                       
+                      <div class="form-group">
+                        <label class="control-label ">Status</label>
+                        <div class="">
+                            <div class="radio col-md-3 col-sm-6 col-xs-12">
+                                <label>
+                                  <input type="radio" class="flat" <?php if($data->status ==0){ ?> checked <?php } ?> name="rdStatus" value="0" > Draft
+                                </label>
+                              </div>
+                              <div class="radio col-md-3 col-sm-6 col-xs-12">
+                                  <label>
+                                    <input type="radio" class="flat" <?php if($data->status ==1){ ?> checked <?php } ?> name="rdStatus" value="1"> Publish
+                                  </label>
+                              </div>
+                          </div>
+                      </div>  
 
-                     
+                      
                       <div class="form-group">
                         <label class="control-label ">Hình ảnh</label>
                         <div class="">
@@ -137,17 +185,38 @@
                             <input type="file"  name="fImage"  class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
+                        
                       </div>  
-
-                       <div id="preview">
+                      <div id="preview">
                             <img  src="{{$data->image}}" alt="">
-                        </div>
-  
+                      </div>
+                      <br>
+
+                     <!-- edittor -->
+                     <div class="form-group">
+                          <label class="control-label ">Nội dung tin tức</label>
+                      </div>
+                     <textarea name="content">{{$data->content}}</textarea>
+                      <script>
+                        CKEDITOR.config.height = '500px';
+                        CKEDITOR.replace( 'content', {
+                          filebrowserBrowseUrl: '{{ asset('ckfinder/ckfinder.html') }}',
+                          filebrowserImageBrowseUrl: '{{ asset('ckfinder/ckfinder.html?type=Images') }}',
+                          filebrowserFlashBrowseUrl: '{{ asset('ckfinder/ckfinder.html?type=Flash') }}',
+                          filebrowserUploadUrl: '{{ asset('ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files') }}',
+                          filebrowserImageUploadUrl: '{{ asset('ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images') }}',
+                          filebrowserFlashUploadUrl: '{{ asset('ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash') }}'
+                          });
+                      </script>
+                      <!-- end editor -->
+
+                      
                      <br>
                      <br>         
                       <div class="ln_solid"></div>
                       <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                           
                             <button class="btn btn-primary" type="reset">Reset</button>
                             <button type="submit" class="btn btn-success">Submit</button>
                         </div>
@@ -166,9 +235,7 @@
 
         <!-- footer content -->
         <footer>
-          <div class="pull-right">
-            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
-          </div>
+         
           <div class="clearfix"></div>
         </footer>
         <!-- /footer content -->
@@ -214,9 +281,12 @@
     <script src="../../vendors/starrr/dist/starrr.js"></script>
     <!-- Custom Theme Scripts -->
     <script src="../../build/js/custom.min.js"></script>
-
-
+    
     <script type="text/javascript">
+      $(".tag").select2();
+  </script> 
+
+  <script type="text/javascript">
     function readURL(input){
       if (input.files&&input.files[0]) {
         var reader=new FileReader();

@@ -73,30 +73,63 @@
                 <h3> Danh sách danh mục</h3>
               </div>
 
-            <div class="title_right">
-                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                  <form action="/search/news-category">
-                  <div class="input-group">
-                    <input type="text" class="form-control" name=key placeholder="Search tag">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default" type="submit">Go!</button>
-                    </span>
-                  </div>
-                  </form>
-                  
-                </div>
+              <div class="title_right">
+                <div class="col-md-12 col-sm-12 col-xs-12 form-group pull-right ">
+                
               </div>
 
             </div> 
-           
+            <div style="" class="col-md-12">
+            <div class="x_panel">
+              <h4>Tìm kiếm</h4>
+            <form method="get" action="/search/news" id="demo-form" data-parsley-validate class="form-horizontal form-label-left  col-md-12" enctype="multipart/form-data">
+                        
+                      <div class="form-group col-md-3 col-sm-6 col-xs-12">
+                        <label class="control-label">Tiêu đề tin </label>
+                        <div class="">  
+                          <input type="text"  name="name" class="form-control col-md-12 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group col-md-3 col-sm-6 col-xs-12">
+                        <label class="control-label">Danh muc </label>
+                        <div class="">  
+                            <select class="form-control" name="category" >
+                                <option value="" >Choose option</option>
+                                @foreach($category as $v)
+                                <option value="{{ $v->id }}" >{{$v->name}}</option>         
+                                @endforeach                
+                            </select>
+                        </div>
+                      </div>
 
+                      <div class="form-group col-md-3 col-sm-6 col-xs-12">  
+                        <label class="control-label" >Trạng thái</label>
+                        <div class="">
+                            <select class="form-control" name="status" >
+                                <option value="" > Choose option </option>
+                                <option value="0" >Draft</option>
+                                <option value="1" >Publish</option>                          
+                            </select>
+                        </div>
+                      </div>
+                      <div class="form-group col-md-3 col-sm-6 col-xs-12">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                       
+                          <button type="submit" class="btn btn-success" style="margin-top:20px"">Tìm kiếm</button>
+                        </div>
+                      </div>
+
+                    </form>
+                </div>
+            </div>
+            
 
                 <!--table -->
                 <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <a href="/news-categories/create" class="btn btn-primary">Thêm mới danh mục</a>
+                    <a href="/news/create" class="btn btn-primary">Thêm mới danh mục</a>
                    
                     <div class="clearfix"></div>
                   </div>
@@ -108,7 +141,9 @@
                           <th>STT</th>
                           <th>Name</th>
                           <th>Slug</th>
-                          <th>Mô tả</th>
+                          <th>Tag  </th>
+                          <th>Chuyên mục </th>
+                          <th>Mô tả ngắn</th>
                           <th>Image</th>
                           <th>Công cụ</th>
                         </tr>
@@ -116,21 +151,23 @@
 
 
                       <tbody>
-                        @foreach ($category as $key => $v)
+                        @foreach ($data as $key => $v)
                         <tr>
                           <td>{{ $key+1 }}</td>
                           <td>{{ $v->name }}</td>
                           <td>{{ $v->slug }}</td>
-                          <td>{{ $v->meta_description }}</td>
+                          <td><ol>@foreach($v->tag as $a)<li> {{$a->name}}</li> @endforeach </ol></td>
+                          <td>{{ $v->category->name }}</td>
+                          <td>{{ $v->short_description }}</td>
                           <td> <img src="{{ $v->image }}" width="150"></td>
                           <td >
+                        
+                              <a  style="float: left;" href="/news/{{$v->id}}/edit" class="btn btn-success">Sửa</a>
                             
-                              <a  style="float: left;" href="/news-categories/{{$v->id}}/edit" class="btn btn-success">edit</a>
-                            
-                            <form method="post" action="{{ route('news-categories.destroy', $v->id) }}" style="float: left;">
+                            <form method="post" action="{{ route('news.destroy', $v->id) }}" style="float: left;">
                               @method('delete')
                               @csrf
-                              <button type="submit" class="btn btn-danger" onclick="return window.confirm('Are you sure')">delete</button>
+                              <button type="submit" class="btn btn-danger" onclick="return window.confirm('Bạn có chắc chắn muốn xóa')">Xóa</button>
                             </form>
                           </td>
                         @endforeach

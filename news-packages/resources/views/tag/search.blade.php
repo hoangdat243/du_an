@@ -70,12 +70,12 @@
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3> Danh sách danh mục</h3>
+                <h3> Danh sách tìm kiếm theo tag</h3>
               </div>
 
-            <div class="title_right">
+              <div class="title_right">
                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                  <form action="/search/news-category">
+                  <form action="/search/news-tag">
                   <div class="input-group">
                     <input type="text" class="form-control" name=key placeholder="Search tag">
                     <span class="input-group-btn">
@@ -83,7 +83,6 @@
                     </span>
                   </div>
                   </form>
-                  
                 </div>
               </div>
 
@@ -96,7 +95,7 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <a href="/news-categories/create" class="btn btn-primary">Thêm mới danh mục</a>
+                    <a href="/news-tag/create" class="btn btn-primary">Thêm mới thẻ tag</a>
                    
                     <div class="clearfix"></div>
                   </div>
@@ -116,7 +115,7 @@
 
 
                       <tbody>
-                        @foreach ($category as $key => $v)
+                        @foreach ($tag as $key => $v)
                         <tr>
                           <td>{{ $key+1 }}</td>
                           <td>{{ $v->name }}</td>
@@ -125,9 +124,9 @@
                           <td> <img src="{{ $v->image }}" width="150"></td>
                           <td >
                             
-                              <a  style="float: left;" href="/news-categories/{{$v->id}}/edit" class="btn btn-success">edit</a>
+                              <a  style="float: left;" href="/news-tag/{{$v->id}}/edit" class="btn btn-success">edit</a>
                             
-                            <form method="post" action="{{ route('news-categories.destroy', $v->id) }}" style="float: left;">
+                            <form method="post" action="{{ route('news-tag.destroy', $v->id) }}" style="float: left;">
                               @method('delete')
                               @csrf
                               <button type="submit" class="btn btn-danger" onclick="return window.confirm('Are you sure')">delete</button>

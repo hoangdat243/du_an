@@ -16,3 +16,8 @@ Route::get('/', function () {
 });
 Route::resource('news','NewsController');
 Route::resource('news-categories','NewsCategoryController');
+Route::resource('news-tag','TagController');
+
+Route::get('search/news-tag','TagController@search');
+Route::get('search/news-category','NewsCategoryController@search');
+Route::get('search/news','NewsController@search');
