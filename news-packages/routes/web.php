@@ -21,3 +21,7 @@ Route::resource('news-tag','TagController');
 Route::get('search/news-tag','TagController@search');
 Route::get('search/news-category','NewsCategoryController@search');
 Route::get('search/news','NewsController@search');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

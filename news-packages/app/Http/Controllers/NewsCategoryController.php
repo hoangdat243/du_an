@@ -13,6 +13,7 @@ class NewsCategoryController extends Controller
      */
     public function index()
     {
+        
         $category= App\NewsCategory::all();
         
         return view('category.category',compact('category'));
@@ -112,8 +113,20 @@ class NewsCategoryController extends Controller
     public function update(Request $request, $id)
     {
         
-        
-        $category= App\NewsCategory::find($id);
+        $request->validate([
+            'txtName' => 'required|max:255',
+            'txtMetaTitle' => 'required|max:60',
+            'txtDescription' => 'required|max:255',
+            'txtSlug' => 'max:255'
+        ],[
+            'txtName.required'  => 'Chưa nhập tên',
+            'txtName.max'       => 'Tên phải ít hơn 255 kí tự',
+            'txtMetaTitle.required' => 'Chưa nhập Meta Title',
+            'txtMetaTitle.max'    => 'Meta Title không được quá 60 kí tự',
+            'txtDescription.required' => 'Chưa nhập mô tả',
+            'txtName.max' => 'Slug vượt quá 255 kí tự',
+        ]);
+        $category = App\NewsCategory::find($id);
         $category->name= $request->txtName;
         $category->slug= $request->txtSlug;
         $category->meta_title= $request->txtMetaTitle;

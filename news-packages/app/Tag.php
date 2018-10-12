@@ -10,7 +10,7 @@ class Tag extends Model
     use Sluggable;
     protected $table='tags';
     protected $fillable=['name','slug'];
-    protected $timestamp=false;
+    public $timestamps = false;
 
     public function Tag(){
         return $this->belongsToMany('App\Tag','news_tags','news_id','tags_id');

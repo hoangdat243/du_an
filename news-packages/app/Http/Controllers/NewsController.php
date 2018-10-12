@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App;
+use Auth;
 class NewsController extends Controller
 {
     /**
@@ -17,7 +18,6 @@ class NewsController extends Controller
 
         $data= App\News::all();
         $category= App\NewsCategory::all();
-        // var_dump($data->toArray());
         return view('news.index',compact('data','category'));
     }
 
@@ -42,6 +42,35 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
+        $users= Auth::user();
+        $request->validate([
+            'txtName' => 'required|unique:news,name|max:255', 
+            'txtSlug' => 'max:255',
+            'txtMetaTitle' => 'required|max:60',
+            'txtShortDescription' => 'required|max:255',
+            'txtDescription' => 'required|max:255',
+            'txtCreate' => 'required',
+            'content' => 'required',
+            'slCategory' => 'required',
+            'slTag' => 'required',
+            'fImage' => 'required'
+
+        ],[
+            'txtName.required'  => 'Chưa nhập tên tin tức',
+            'txtName.unique'    => 'Tên đã tồn tại',
+            'txtName.max'       => 'Tên phải ít hơn 255 kí tự',
+            'txtMetaTitle.required' => 'Chưa nhập Meta Title',
+            'txtShortDescription.required' => 'Chưa nhập mô tả ngắn',
+            'txtShortDescription.max' => 'Mô tả ngắn không được quá 255 kí tự',
+            'txtMetaTitle.max'    => 'Meta Title không được quá 60 kí tự',
+            'txtDescription.required' => 'Chưa nhập mô tả',
+            'txtDescription.max' => 'Mô tả vượt quá 255 kí tự',
+            'txtCreate.required' => 'Chưa nhập thời gian tạo',
+            'content.required' => 'Chưa nhập nội dung tin tức',
+            'slCategory.required' => 'Chưa chọn danh mục',
+            'slTag.required' => 'Chưa chọn thẻ tag',
+            'fImage.required' => 'Chưa chọn ảnh',
+        ]);
         $news= new App\News;
         $news->name= $request->txtName;
         $news->meta_title= $request->txtMetaTiTle;
@@ -56,9 +85,9 @@ class NewsController extends Controller
         $news->meta_description= $request->txtDescription;
         $news->content=$request->content ;
         $news->status= $request->rdStatus;
-        $news->author_id= 1;
+        $news->author_id= $users->id;
         $news->category_id= $request->slCategory;
-        
+        $news->created_at=$request->txtCreate;
         if (isset($request->fImage)) {
             $file = $request->fImage;
             $name=$file->getClientOriginalName();
@@ -69,7 +98,7 @@ class NewsController extends Controller
         }
         $news->save();
         $news->Tag()->attach($request->slTag);
-        
+        return redirect('news');
 
     }
 
@@ -112,6 +141,29 @@ class NewsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'txtName' => 'required|max:255', 
+            'txtSlug' => 'max:255',
+            'txtMetaTitle' => 'required|max:60',
+            'txtShortDescription' => 'required|max:255',
+            'txtDescription' => 'required|max:255',         
+            'content' => 'required',
+            'slCategory' => 'required',
+            'slTag' => 'required',
+        ],[
+            'txtName.required'  => 'Chưa nhập tên tin tức',
+            'txtName.max'       => 'Tên phải ít hơn 255 kí tự',
+            'txtMetaTitle.required' => 'Chưa nhập Meta Title',
+            'txtShortDescription.required' => 'Chưa nhập mô tả ngắn',
+            'txtShortDescription.max' => 'Mô tả ngắn không được quá 255 kí tự',
+            'txtMetaTitle.max'    => 'Meta Title không được quá 60 kí tự',
+            'txtDescription.required' => 'Chưa nhập mô tả',
+            'txtDescription.max' => 'Mô tả vượt quá 255 kí tự',
+            'content.required' => 'Chưa nhập nội dung tin tức',
+            'slCategory.required' => 'Chưa chọn danh mục',
+            'slTag.required' => 'Chưa chọn thẻ tag',
+            
+        ]);
         $news= App\News::find($id);
         $news->name= $request->txtName;
         $news->meta_title= $request->txtMetaTiTle;
@@ -129,6 +181,9 @@ class NewsController extends Controller
         $news->author_id= 1;
         $news->category_id= $request->slCategory;
         
+        if(isset($request->txtCreate)){
+            $news->created_at=$request->txtCreate;
+        }
         if (isset($request->fImage)) {
             $file = $request->fImage;
             $name=$file->getClientOriginalName();
@@ -152,10 +207,14 @@ class NewsController extends Controller
     public function destroy($id)
     {
         //
+
+        App\News::destroy($id);
+        return redirect()->back();
     }
 
     public function search(Request $request)
     {
+        $category= App\NewsCategory::all();
         $data = App\News::orderBy('id', 'desc');
         $data = $data->where(function ($q) use ($request) {
             if(!empty($request->name)){
@@ -169,8 +228,7 @@ class NewsController extends Controller
             }
            
         })->get();
-       
-       var_dump($data->toArray());
+        return view('news.search',compact('data','category'));
     }
     
 }

@@ -1,0 +1,10 @@
+{
+    "name": "hoangdat/news",
+    "authors": [
+        {
+            "name": "hoangdat",
+            "email": "datht@vinsofts.net"
+        }
+    ],
+    "require": {}
+}

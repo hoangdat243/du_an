@@ -111,7 +111,20 @@ class TagController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        $request->validate([
+            'txtName' => 'required|max:255',
+            'txtMetaTitle' => 'required|max:60',
+            'txtDescription' => 'required|max:255',
+            'txtSlug' => 'max:255'
+            
+        ],[
+            'txtName.required'  => 'Chưa nhập tên',
+            'txtName.max'       => 'Tên phải ít hơn 255 kí tự',
+            'txtMetaTitle.required' => 'Chưa nhập Meta Title',
+            'txtMetaTitle.max'    => 'Meta Title không được quá 60 kí tự',
+            'txtDescription.required' => 'Chưa nhập mô tả',
+            'txtName.max' => 'Slug vượt quá 255 kí tự',
+        ]);
         
         $tag= App\Tag::find($id);
         $tag->name= $request->txtName;
