@@ -63,7 +63,7 @@
             <br />
 
           <!--menu -->
-          @include('menu')
+          @include('v::menu')
           <!--end menu -->
           </div>
         </div>

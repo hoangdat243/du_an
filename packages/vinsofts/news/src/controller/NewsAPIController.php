@@ -7,7 +7,7 @@ use App;
 class NewsAPIController extends Controller
 {
     public function category($id){
-        $data=  App\NewsCategory::find($id);
+        $data=  NewsCategory::find($id);
         if($data==null){
             return response()->json($data,204);
         }else{
@@ -15,7 +15,7 @@ class NewsAPIController extends Controller
         }
     }
     public function tag($id){
-        $data=  App\Tag::find($id);
+        $data=  Tag::find($id);
         if($data==null){
             return response()->json($data,204);
         }else{
@@ -23,12 +23,12 @@ class NewsAPIController extends Controller
         }
     }
     public function newsDetail($id){
-        $nID= App\News::find($id);
+        $nID= News::find($id);
         if($nID==null){
             return response()->json('',204);
         }
         else{
-            $data=  App\News::where('id',$id)->with("tag")->get();
+            $data=  News::where('id',$id)->with("tag")->get();
             $news = ['id' => $data[0]['id'],
                     'name' => $data[0]['name'],
                     'slug' => $data[0]['slug'],
@@ -54,11 +54,11 @@ class NewsAPIController extends Controller
     }
 
     public function getNewsByCategory($id){
-        $nID= App\News::where('category_id',$id)->get();
+        $nID= News::where('category_id',$id)->get();
         if(count($nID)<1){
             return response()->json('',204);
         }else{
-            $data=  App\News::where('category_id',$id)->with("tag")->get();
+            $data=  News::where('category_id',$id)->with("tag")->get();
             $arr2=[];
             $arr=[];
             foreach($data as $v){
@@ -85,7 +85,7 @@ class NewsAPIController extends Controller
         } 
     }
     public function getNewsByTag($id){
-        $data=  App\News::with('tag')->whereHas('tag', function($q) use($id) {$q->where('tags_id', '=', $id); })->get();
+        $data=  News::with('tag')->whereHas('tag', function($q) use($id) {$q->where('tags_id', '=', $id); })->get();
         if(count($data)<1){
             return response()->json('không có dữ liệu',204);
         }else{
@@ -116,7 +116,7 @@ class NewsAPIController extends Controller
     }
 
     public function getNewsByAuthor($id){
-        $data=  App\News::where('author_id',$id)->with("tag")->get();
+        $data=  News::where('author_id',$id)->with("tag")->get();
         if(count($data)<1){
             return response()->json('',204);
         }else{

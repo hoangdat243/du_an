@@ -15,7 +15,8 @@ class NewsController extends Controller
     public function index()
     {
         //
-
+        $u= Auth::user();
+       
         $data= News::all();
         $category= NewsCategory::all();
         return view('v::news.index',compact('data','category'));
@@ -29,8 +30,8 @@ class NewsController extends Controller
     public function create()
     {
         
-        $category= App\NewsCategory::all();
-        $tag= App\Tag::all();
+        $category= NewsCategory::all();
+        $tag= Tag::all();
         return view('v::news.add',compact('category','tag'));
     }
 
@@ -71,7 +72,7 @@ class NewsController extends Controller
             'slTag.required' => 'Chưa chọn thẻ tag',
             'fImage.required' => 'Chưa chọn ảnh',
         ]);
-        $news= new App\News;
+        $news= new News;
         $news->name= $request->txtName;
         $news->meta_title= $request->txtMetaTiTle;
         if (isset($request->txtSlug)) {
@@ -85,7 +86,7 @@ class NewsController extends Controller
         $news->meta_description= $request->txtDescription;
         $news->content=$request->content ;
         $news->status= $request->rdStatus;
-        $news->author_id= $users->id;
+        $news->author_id= 1;
         $news->category_id= $request->slCategory;
         $news->created_at=$request->txtCreate;
         if (isset($request->fImage)) {
@@ -111,7 +112,7 @@ class NewsController extends Controller
     public function show($id)
     {
         //
-        $data= App\News::where('slug',$id)->get();
+        $data= News::where('slug',$id)->get();
         var_dump($data->toArray());
 
     }
@@ -125,9 +126,9 @@ class NewsController extends Controller
     public function edit($id)
     {
         //
-        $data= App\News::find($id);
-        $category=App\NewsCategory::all();
-        $tag=App\Tag::all();
+        $data= News::find($id);
+        $category=NewsCategory::all();
+        $tag= Tag::all();
       
         return view('v::news.edit',compact('data','category','tag'));
     }
@@ -164,7 +165,7 @@ class NewsController extends Controller
             'slTag.required' => 'Chưa chọn thẻ tag',
             
         ]);
-        $news= App\News::find($id);
+        $news= News::find($id);
         $news->name= $request->txtName;
         $news->meta_title= $request->txtMetaTiTle;
         if (isset($request->txtSlug)) {

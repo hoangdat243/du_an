@@ -12,13 +12,13 @@ class News extends Model
     public $timestamps = false;
     
     public function Category(){
-        return $this->belongsTo('App\NewsCategory','category_id','id');
+        return $this->belongsTo('Vinsofts\News\NewsCategory','category_id','id');
     }
     public function Author(){
-        return $this->belongsTo('App\NewsAuthor','author_id','id');
+        return $this->belongsTo('Vinsofts\News\NewsAuthor','author_id','id');
     }
     public function Tag(){
-        return $this->belongsToMany('App\Tag','news_tags','news_id','tags_id')  ;
+        return $this->belongsToMany('Vinsofts\News\Tag','news_tags','news_id','tags_id')  ;
     }
     
    

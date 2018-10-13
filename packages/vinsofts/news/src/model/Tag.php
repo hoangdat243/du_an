@@ -11,7 +11,7 @@ class Tag extends Model
     protected $fillable=['name','slug'];
     public $timestamps = false;
 
-    public function Tag(){
+    public function News(){
         return $this->belongsToMany('App\Tag','news_tags','news_id','tags_id');
     }
    

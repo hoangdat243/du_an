@@ -13,7 +13,7 @@ class TagController extends Controller
      */
     public function index()
     {
-        $tag= App\Tag::all();
+        $tag= Tag::all();
         
         return view('v::tag.index',compact('tag'));
     }
@@ -56,7 +56,7 @@ class TagController extends Controller
         ]);
 
 
-        $tag= new App\Tag;
+        $tag= new Tag;
         $tag->name= $request->txtName;
         if (isset($request->txtSlug)) {
             $tag->slug= $request->txtSlug;
@@ -98,7 +98,7 @@ class TagController extends Controller
      */
     public function edit($id)
     {
-        $data= App\Tag::find($id);
+        $data= Tag::find($id);
         return view('tag.edit',compact('data'));
     }
 
@@ -126,7 +126,7 @@ class TagController extends Controller
             'txtName.max' => 'Slug vượt quá 255 kí tự',
         ]);
         
-        $tag= App\Tag::find($id);
+        $tag= Tag::find($id);
         $tag->name= $request->txtName;
         $tag->slug= $request->txtSlug;
         $tag->meta_title= $request->txtMetaTitle;
@@ -151,12 +151,12 @@ class TagController extends Controller
      */
     public function destroy($id)
     {
-        App\Tag::destroy($id);
+        Tag::destroy($id);
         return redirect()->back();
     }
     public function search(Request $request)
     {
-        $tag= App\Tag::where('name','like','%'.$request->key.'%')->get();
+        $tag= Tag::where('name','like','%'.$request->key.'%')->get();
        return view('tag.search',compact('tag'));
     }
 }

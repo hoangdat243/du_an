@@ -14,7 +14,7 @@ class NewsCategoryController extends Controller
     public function index()
     {
         
-        $category= App\NewsCategory::all();
+        $category= NewsCategory::all();
         
         return view('v::category.category',compact('category'));
     }
@@ -57,7 +57,7 @@ class NewsCategoryController extends Controller
         ]);
 
 
-        $category= new App\NewsCategory;
+        $category= new NewsCategory;
         $category->name= $request->txtName;
         if (isset($request->txtSlug)) {
             $category->slug= $request->txtSlug;
@@ -99,7 +99,7 @@ class NewsCategoryController extends Controller
      */
     public function edit($id)
     {
-        $data= App\NewsCategory::find($id);
+        $data= NewsCategory::find($id);
         return view('v::category.edit',compact('data'));
     }
 
@@ -126,7 +126,7 @@ class NewsCategoryController extends Controller
             'txtDescription.required' => 'Chưa nhập mô tả',
             'txtName.max' => 'Slug vượt quá 255 kí tự',
         ]);
-        $category = App\NewsCategory::find($id);
+        $category = NewsCategory::find($id);
         $category->name= $request->txtName;
         $category->slug= $request->txtSlug;
         $category->meta_title= $request->txtMetaTitle;
@@ -156,7 +156,7 @@ class NewsCategoryController extends Controller
     }
     public function search(Request $request)
     {
-        $tag= App\NewsCategory::where('name','like','%'.$request->key.'%')->get();
+        $tag= NewsCategory::where('name','like','%'.$request->key.'%')->get();
        return view('tag.search',compact('tag'));
     }
     
